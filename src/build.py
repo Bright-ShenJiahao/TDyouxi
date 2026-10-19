@@ -40,7 +40,7 @@ for key, fname, w in [('tlei', 'tower_lei.png', 260), ('tpao', 'tower_pao.png', 
         IMG[key] = uri(fit(fname, w))
 
 # 脚本按顺序拼接；debug.js 只进开发版
-SCRIPTS = ['config/balance.js', 'config/cards.js', 'config/layout.js', 'js/core.js', 'js/enemies.js', 'js/towers.js', 'js/hero.js', 'js/cards.js', 'js/ui.js']
+SCRIPTS = ['config/balance.js', 'config/cards.js', 'config/layout.js', 'js/core.js', 'js/audio.js', 'js/enemies.js', 'js/towers.js', 'js/hero.js', 'js/cards.js', 'js/ui.js']
 DEV_SCRIPTS = ['js/debug.js']
 def read(rel): return '\n/* ===== ' + rel + ' ===== */\n' + open(os.path.join(D, rel), encoding='utf-8').read()
 
