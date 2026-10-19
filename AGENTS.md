@@ -34,12 +34,17 @@
 - 合并后打开正式网址确认一次。
 
 ## 5. 项目结构
-- `src/td_template.html`：页面代码（地图、主殿、符塔、英雄、僵尸、路线、空地、调试模式）
-- `src/build.py`：打包脚本
-- `src/map_cn.jpg`：中国风地图；`src/hall.png`、`src/tower.png`：主殿、符塔
-- `src/px_taoist.png`、`src/px_zombie.png`：像素道长、僵尸
-- `src/bagua_platform.png`：八卦石台（备用，暂未使用）
-- 布局（主殿、塔位、英雄守点、路线点、各尺寸）写在模板的 `DEFAULT` 里。Shen 在开发版里调好后会发来「导出布局」的文字，把它替换进 `DEFAULT` 即可。
+- `src/config/`：**纯数据**，调数值、加卡牌只改这里
+  - `balance.js`：经济、四种塔、英雄酒馆、怪物、波次、选卡概率
+  - `cards.js`：卡池
+  - `layout.js`：主殿、空地、三条路线的坐标和尺寸
+- `src/js/`：功能模块（打包时按 `src/build.py` 里 `SCRIPTS` 的顺序拼接）
+  - `core.js` 状态与主循环；`enemies.js` 怪物；`towers.js` 塔与子弹；`hero.js` 英雄酒馆与道长；`cards.js` 选卡与法术；`ui.js` 画面、菜单、点击
+  - `debug.js` 调试模式，**只进开发版**
+- `src/td_template.html`：页面外壳
+- 素材：`map_cn.jpg` 地图，`hall.png` 主殿，`tower.png` 符塔，`px_*.png` 像素道长 / 僵尸 / 幽魂 / 尸王
+- 文档：`docs/第一关设计.md`（玩法）、`docs/任务卡.md`（可领取的任务）、`docs/美术规范与提示词.md`（出图）
+- 新增 JS 文件要在 `src/build.py` 的 `SCRIPTS` 里登记，否则不会被打包。
 
 ## 6. 版权
 - 不要放入其他游戏的角色、截图或素材（例如梦幻西游的剑侠客、王国保卫战的原图）。

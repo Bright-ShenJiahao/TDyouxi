@@ -31,7 +31,18 @@ IMG = {
     'tower': uri(fit('tower.png', 260)),
     'pt':    raw('px_taoist.png'),
     'pz':    raw('px_zombie.png'),
+    'pg':    raw('px_ghost.png'),
+    'pk':    raw('px_king.png'),
 }
+# 正式美术到了之后，把图片放进 src/ 并在这里登记即可自动替换占位（键名见 balance.js 里的 img）
+for key, fname, w in [('tlei', 'tower_lei.png', 260), ('tpao', 'tower_pao.png', 260), ('twang', 'tower_wang.png', 260), ('tavern', 'tavern.png', 300)]:
+    if os.path.exists(os.path.join(D, fname)):
+        IMG[key] = uri(fit(fname, w))
+
+# 脚本按顺序拼接；debug.js 只进开发版
+SCRIPTS = ['config/balance.js', 'config/cards.js', 'config/layout.js', 'js/core.js', 'js/enemies.js', 'js/towers.js', 'js/hero.js', 'js/cards.js', 'js/ui.js']
+DEV_SCRIPTS = ['js/debug.js']
+def read(rel): return '\n/* ===== ' + rel + ' ===== */\n' + open(os.path.join(D, rel), encoding='utf-8').read()
 
 def strip(text, drop):
     for o, c in [(f'<!--{drop}-->', f'<!--/{drop}-->'), (f'/*{drop}*/', f'/*/{drop}*/')]:
@@ -48,9 +59,16 @@ for tag in ('DEV', 'REL'):
             sys.exit(f'标记不成对：{o} {tpl.count(o)} 个，{c} {tpl.count(c)} 个')
 
 assets = 'const IMG=' + json.dumps(IMG) + ';'
+rel_js = ''.join(read(f) for f in SCRIPTS)
+dev_js = rel_js + ''.join(read(f) for f in DEV_SCRIPTS)
+for src in (rel_js, dev_js):
+    for tag in ('DEV', 'REL'):
+        o, c = f'/*{tag}*/', f'/*/{tag}*/'
+        if src.count(o) != src.count(c):
+            sys.exit(f'脚本里标记不成对：{o}')
 outs = {
-    os.path.join(ROOT, 'public', 'index.html'): strip(tpl, 'DEV'),
-    os.path.join(ROOT, 'public', 'dev', 'index.html'): strip(tpl, 'REL'),
+    os.path.join(ROOT, 'public', 'index.html'): strip(tpl.replace('/*SCRIPTS*/', rel_js), 'DEV'),
+    os.path.join(ROOT, 'public', 'dev', 'index.html'): strip(tpl.replace('/*SCRIPTS*/', dev_js), 'REL'),
 }
 for dst, html in outs.items():
     html = html.replace('/*ASSETS*/', assets)
@@ -59,7 +77,7 @@ for dst, html in outs.items():
     print('wrote', os.path.relpath(dst, ROOT), len(html) // 1024, 'KB')
 
 rel = outs[os.path.join(ROOT, 'public', 'index.html')]
-for word in ('dbgbtn', 'dbgbar', 'drawDebug', 'localStorage', '调试模式', '导出布局'):
+for word in ('dbgbtn', 'dbgbar', 'drawDebug', 'localStorage', '调试模式', '导出布局', 'DBG.'):
     if word in rel:
         sys.exit(f'正式版里还残留调试内容：{word}')
 print('check ok: 正式版不含调试代码')
