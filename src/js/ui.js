@@ -92,6 +92,7 @@ function render(t) {
 
 // ---------- HUD ----------
 const HUD = {
+  mute: { x: MW - 216, y: 14, w: 62, h: 42 },
   speed: { x: MW - 148, y: 14, w: 62, h: 42 }, pause: { x: MW - 78, y: 14, w: 62, h: 42 },
   call: { x: MW / 2 - 140, y: MH - 70, w: 280, h: 52 },
 };
@@ -105,6 +106,7 @@ function drawHUD() {
   ctx.fillStyle = '#f2c94a'; ctx.fillText('钱', 132, 38); ctx.fillStyle = '#fff'; ctx.fillText(Math.floor(G.coins), 158, 38);
   ctx.fillStyle = '#9fd8ff'; ctx.fillText('波', 252, 38); ctx.fillStyle = '#fff'; ctx.fillText(Math.max(G.wave, 0) + '/' + WAVES.length, 278, 38);
   ctx.restore();
+  pixelButton(HUD.mute, AUDIO_MUTED ? '开声' : '静音', AUDIO_MUTED ? '#7a3a2a' : '#5a4630', true, 18);
   pixelButton(HUD.speed, G.speed === 2 ? '2×' : '1×', G.speed === 2 ? '#b8862e' : '#5a4630', true, 20);
   pixelButton(HUD.pause, G.paused ? '▶' : 'Ⅱ', '#5a4630', true, 20);
   if (G.state === 'prep') {
@@ -218,6 +220,7 @@ function onClick(m) {
     if (hitR(m, rerollRect())) rerollCards();
     return;
   }
+  if (hitR(m, HUD.mute)) { toggleMute(); return; }
   if (hitR(m, HUD.speed)) { G.speed = G.speed === 1 ? 2 : 1; return; }
   if (hitR(m, HUD.pause)) { G.paused = !G.paused; return; }
   if (G.paused) return;

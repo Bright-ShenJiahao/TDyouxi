@@ -11,6 +11,7 @@ function updateSpawns(dt) {
 
 function spawnEnemy(type, route, hpScale) {
   const D = ENEMIES[type];
+  if (type === 'king') sfx('boss');
   const hp = Math.round(D.hp * hpScale * G.M.enemyHp);
   const R = LAY.routes[route];
   G.enemies.push({
@@ -39,6 +40,7 @@ function damage(e, base, type) {
 function killEnemy(e) {
   if (e.dead) return;
   e.dead = 0.001; G.kills++;
+  sfx('die');
   const c = e.D.bounty + G.M.killCoins;
   G.coins += c;
   floatText(e.x, e.y - e.D.size, '+' + c, '#f2c95a', 0.8, 14);

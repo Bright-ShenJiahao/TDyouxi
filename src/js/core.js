@@ -104,6 +104,7 @@ function startWave(early) {
   }
   G.wave++;
   G.state = 'wave';
+  sfx('wave');
   const W = WAVES[G.wave - 1];
   let t = 0;
   for (const [type, n, gap, route] of W.groups) {
@@ -119,7 +120,7 @@ function startWave(early) {
 }
 
 function endWave() {
-  if (G.wave >= WAVES.length) { G.state = 'win'; return; }
+  if (G.wave >= WAVES.length) { G.state = 'win'; sfx('win'); return; }
   const bonus = ECONOMY.waveBonusBase + ECONOMY.waveBonusPerWave * G.wave + G.M.waveCoins;
   G.coins += bonus;
   floatText(MW / 2, 150, '击退第 ' + G.wave + ' 波  +' + bonus + ' 铜钱', '#9fe08a', 2.2, 34);
@@ -127,8 +128,9 @@ function endWave() {
 }
 
 function loseLife(n) {
+  sfx('leak');
   G.lives -= n; G.leaked += n; G.hallHit = 1;
-  if (G.lives <= 0) { G.lives = 0; G.state = 'lose'; }
+  if (G.lives <= 0) { G.lives = 0; G.state = 'lose'; sfx('lose'); }
 }
 
 function floatText(x, y, s, color, life, size) { G.texts.push({ x, y, s, color: color || '#fff', life: life || 1, t: 0, size: size || 18 }); }

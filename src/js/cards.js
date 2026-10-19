@@ -43,6 +43,7 @@ function openCardPick() {
 }
 
 function pickCard(c) {
+  sfx('card');
   G.picks[c.id] = (G.picks[c.id] || 0) + 1;
   if (c.tower) G.streak[c.tower]++;
   c.apply(G.M, G);

@@ -11,6 +11,7 @@ function buildTavern(slot) {
   const c = tavernCost(0); if (G.coins < c) return false;
   G.coins -= c;
   slot.tower = { type: 'tavern', lv: 1, spent: c, build: 1 };
+  sfx('build');
   summonHero(slot);
   return true;
 }

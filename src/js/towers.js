@@ -12,11 +12,12 @@ function buildTower(slot, type) {
   const c = buildCost(type); if (G.coins < c || slot.tower) return false;
   G.coins -= c;
   slot.tower = { type, lv: 1, adv: false, spent: c, cd: 0.3, advCd: 6, build: 1 };
+  sfx('build');
   return true;
 }
 function upgradeTower(slot) {
   const t = slot.tower, c = upCost(t); if (c == null || G.coins < c) return false;
-  G.coins -= c; t.spent += c; t.lv++; t.build = 1; return true;
+  G.coins -= c; t.spent += c; t.lv++; t.build = 1; sfx('up'); return true;
 }
 function advanceTower(slot) {
   const t = slot.tower; if (!canAdvance(t)) return false;
@@ -70,6 +71,7 @@ function updateTowers(dt) {
 function attack(s, t, st, list) {
   const top = { x: s.x + 10, y: s.y - 100 };
   t.fire = 1;
+  if (t.type !== 'pao') sfx(t.type === 'fu' ? 'fu' : t.type === 'lei' ? 'lei' : 'net');
   if (t.type === 'fu') {
     const targets = st.multi ? list.sort((a, b) => b.d - a.d).slice(0, st.multi) : [pickTarget(list)];
     for (const tg of targets) for (let k = 0; k < st.shots; k++) {
@@ -127,6 +129,7 @@ function updateProjs(dt) {
         }
         G.fx.push({ kind: 'boom', x: p.x1, y: p.y1, r: p.r, t: 0, life: 0.45 });
         sparkFx(p.x1, p.y1, '255,150,70', 16);
+        sfx('boom');
       }
     }
   }
