@@ -27,7 +27,7 @@ function initAudio() {
   MASTER = AC.createGain(); MASTER.gain.value = AUDIO_MUTED ? 0 : 0.9;
   MASTER.connect(AC.destination);
   SFXG = AC.createGain(); SFXG.gain.value = 0.8; SFXG.connect(MASTER);
-  MUSG = AC.createGain(); MUSG.gain.value = 0.3; MUSG.connect(MASTER);
+  MUSG = AC.createGain(); MUSG.gain.value = 0.8; MUSG.connect(MASTER);
   if (AC.state === 'suspended') AC.resume();
   startBgm();
 }
@@ -171,21 +171,21 @@ function bgmBeat(i, t) {
   const b = i % 16;                            // 4 小节 × 4 拍循环
   // 低音持续音：每小节第一拍，慢起慢落
   if (b % 4 === 0) {
-    tone(t, 73.42, 3.4, 'sine', 0.08, null, MUSG, 0.5);
-    tone(t, 110, 3.2, 'triangle', 0.03, null, MUSG, 0.6);
+    tone(t, 73.42, 3.4, 'sine', 0.22, null, MUSG, 0.5);
+    tone(t, 110, 3.2, 'triangle', 0.08, null, MUSG, 0.6);
   }
   // 木鱼：每两拍一下（反拍），轻
   if (b % 2 === 1) {
-    noise(t, 0.03, 'bandpass', 2200, 4, 0.12, null, MUSG);
-    tone(t, 1050, 0.03, 'sine', 0.05, null, MUSG);
+    noise(t, 0.03, 'bandpass', 2200, 4, 0.28, null, MUSG);
+    tone(t, 1050, 0.03, 'sine', 0.12, null, MUSG);
   }
   // 锣：每两小节一次，留长尾
   if (b === 0 && (i / 16) % 2 === 0) {
-    [98, 147, 196, 262].forEach((f, k) => tone(t, f, 2.8 - k * 0.4, 'sine', 0.08 / (k + 1), null, MUSG, 0.02));
+    [98, 147, 196, 262].forEach((f, k) => tone(t, f, 2.8 - k * 0.4, 'sine', 0.2 / (k + 1), null, MUSG, 0.02));
   }
   // 稀疏旋律：每小节 1～2 个音，大量留白
   if (b === 6 || b === 10 || b === 14) {
     const n = PENTA[(i * 3 + b) % PENTA.length] / 2;
-    tone(t, n, 1.6, 'triangle', 0.07, n * 0.99, MUSG, 0.04);
+    tone(t, n, 1.6, 'triangle', 0.18, n * 0.99, MUSG, 0.04);
   }
 }
